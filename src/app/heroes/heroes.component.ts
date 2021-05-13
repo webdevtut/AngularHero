@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Hero } from '../hero';
 // import { HeroService } from '../hero.service';
 // import { MessageService } from '../message.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 
 
 @Component({
@@ -14,6 +14,9 @@ import { HttpClient } from '@angular/common/http';
 export class HeroesComponent implements OnInit {
 
   heroes: any ;
+  httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  };
 
   // private heroService: HeroService, private messageService: MessageService,
 
@@ -27,6 +30,19 @@ export class HeroesComponent implements OnInit {
     this.http.get('https://localhost:5001/api/heroes').subscribe(response => {
       this.heroes = response;
       console.log(response);
+      
+    }, error => {
+      console.log(error);
+      
+    })
+  }
+  addHero(name: string) : void{
+    name = name.trim(); 
+    let Obj= {
+      heroName : name
+    }
+    this.http.post('https://localhost:5001/api/heroes/add', Obj,this.httpOptions).subscribe(response => {
+      this.heroes.push(response)
       
     }, error => {
       console.log(error);
